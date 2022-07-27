@@ -8,5 +8,8 @@ using namespace std;
 
 int main() {
   static DatMgr& s = DatMgr::getInstance();
+  string testdot = "balls";
+  s.remove_dot(testdot);
   s.print();
+  s.save();
 }
