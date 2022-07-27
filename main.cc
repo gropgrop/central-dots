@@ -7,6 +7,6 @@
 using namespace std;
 
 int main() {
-  DatMgr s = DatMgr();
+  static DatMgr& s = DatMgr::getInstance();
   s.print();
 }

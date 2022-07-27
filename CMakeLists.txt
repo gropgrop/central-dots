@@ -15,5 +15,3 @@ add_library(data SHARED
 
 add_executable(dotman main.cc)
 target_link_libraries(dotman data)
-
- 
