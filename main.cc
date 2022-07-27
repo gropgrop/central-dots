@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include "./dat/dat.h"
+#include "./include/dat.cc"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 project(dotman VERSION 0.1 LANGUAGES CXX)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
@@ -8,12 +8,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif()
 
-add_library(modules SHARED
-  dot/dot.cc
-  dat/dat.cc
+add_library(data SHARED
+  include/dot.h
+  include/dat.cc
 )
 
 add_executable(dotman main.cc)
-target_link_libraries(dotman modules)
+target_link_libraries(dotman data)
 
  
