@@ -8,7 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 
 
 class DatMgr {
@@ -21,18 +21,22 @@ class DatMgr {
   };          // constructor, reads file initially
   ~DatMgr() { };         // destructor - idk honestly
   void save();       // rewrites data file
-  void add_dot(std::string &, std::string &);    // adds a dot to dot list
+  void add_dot(std::string &, std::string &, bool);    // adds a dot to dot list
   void remove_dot(std::string &); // removes a dot from dot list, unlinks dot
   // int link_dot();    // links all dots
+  void unlink_a_dot(std::string &); // unlinks a dot specified by dot name
+  void unlink_all_dots(); // unlinks every dot.
+  void link_a_dot(std::string &); // links a dot specified by dot name
+  void link_all_dots(); // links every specified dotfile
   void print();
  private:
-  std::unordered_set<Dot,std::hash<Dot>,std::equal_to<Dot>> dotlist;
+  std::unordered_map<std::string,Dot,std::hash<Dot>,std::equal_to<Dot>> dotlist;
   DatMgr() {
     if(debug) std::cout << "DatMgr private ctor\n";
     DatMgr::get_dots(dotlist);
   };
 
-  void get_dots(std::unordered_set<Dot,std::hash<Dot>,std::equal_to<Dot>> &dots) {
+  void get_dots(std::unordered_map<std::string,Dot,std::hash<Dot>,std::equal_to<Dot>> &dots) {
     if(debug) std::cout << "DatMgr::get_dots\n";
     std::fstream fin;
     fin.open("state", std::ios::in);
@@ -44,11 +48,21 @@ class DatMgr {
       while (getline(s, word, ',')) {
         row.push_back(word);
       }
-      dotlist.insert(Dot(row.at(0), row.at(1)));
+      dotlist[row.at(0)] = (Dot(row.at(0), row.at(1), to_bool( row.at(2) ) ) );
       row.clear();
     }
     fin.close();
   }
+
+  // helper fn for reading data
+  bool to_bool(std::string s) {
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    std::istringstream is(s);
+    bool b;
+    is >> std::boolalpha >> b;
+    return b;
+  }
 };
+
 
 #endif
