@@ -30,13 +30,13 @@ class DatMgr {
   void link_all_dots(); // links every specified dotfile
   void print();
  private:
-  std::unordered_map<std::string,Dot,std::hash<std::string>,std::equal_to<char>> dotlist;
+  std::unordered_map<std::string,Dot,std::hash<std::string>,std::equal_to<std::string>> dotlist;
   DatMgr() {
     if(debug) std::cout << "DatMgr private ctor\n";
     DatMgr::get_dots(dotlist);
   };
 
-  void get_dots(std::unordered_map<std::string,Dot,std::hash<std::string>,std::equal_to<char>> &dots) {
+  void get_dots(std::unordered_map<std::string,Dot,std::hash<std::string>,std::equal_to<std::string>> &dots) {
     if(debug) std::cout << "DatMgr::get_dots\n";
     std::fstream fin;
     fin.open("state", std::ios::in);
