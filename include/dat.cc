@@ -13,7 +13,7 @@ void DatMgr::print() {
   Dot i;
   for (pair<string,Dot> d: dotlist) {
     i = d.second;
-    cout << i.name << " " << i.path << '\n';
+    cout << i.name << " " << i.path << " linked:" << boolalpha << i.linked << '\n';
   }
 }
 

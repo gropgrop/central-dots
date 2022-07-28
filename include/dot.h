@@ -17,7 +17,7 @@ class Dot {
     path(p),
     linked(ln)
   {
-    if(debug) std::cout << "Dot ctor:" << name;
+    if(debug) std::cout << "---->Dot ctor:" << name << "\n";
   }; //constructor
   ~Dot() { };       // destructor 
 
