@@ -6,8 +6,6 @@
 #include <algorithm>
 #include <unistd.h>
 
-
-
 const bool debug = true;
 
 class Dot {

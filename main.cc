@@ -2,15 +2,13 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include "./include/dat.cc"
-
+#include "./include/ctl.cc"
 using namespace std;
 
 // main is still worthless
 
 int main() {
-  static DatMgr& s = DatMgr::getInstance();
+  Ctl s = Ctl();
+  s.loop();
   //s.remove_dot(testdot);
-  s.print();
-  s.save();
 }

@@ -3,11 +3,12 @@
 using namespace std;
 
 
+
 class Ctl {
 private:
-  static DatMgr data;
+  DatMgr data;
   enum cmd { REMOVE_DOT, ADD_DOT, UNLINK, LINK, EXIT, HELP, UNKNOWN, NEXT};
-  unordered_map<string, cmd> const mapcmd =
+  unordered_map<string, cmd, hash<string>, equal_to<string>> const mapcmd =
     { { "rm" , cmd::REMOVE_DOT } , // takes: (name), -a (all)
       { "add", cmd::ADD_DOT } ,    // takes: (name)
       { "unlink", cmd::UNLINK} ,   // takes: (name), -a (all)
@@ -25,24 +26,24 @@ private:
   }
   
   vector<string> sanitize(string s) {
+    if(debug) cout << "---> sanitize " << s << "\n";
     transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return std::tolower(c); });
-    string tmp;
+    //string tmp = "";
     vector<string> svec;
-    int startindex = 0, endindex = 0;
-    for (int i = 0; i < s.length(); i++) {
-      if (s.at(i) == ' ') {
-	tmp.append(s, startindex, i-startindex);
+    int startindex = 0;
+    for (unsigned int i = 0; i < s.length(); i++) {
+      if(debug) cout << "------> sanitize loop: " << i << " " << startindex <<  "\n";
+      if (s.at(i) == ' ' || i==(s.length()-1)) {
+	svec.push_back(s.substr(startindex,i-startindex+1));
+	if(debug) cout << "======== got input: " << (svec.back()) << '\n';
 	startindex = i + 1;
-	svec.push_back(tmp);
       }
     }
     return svec;
   } 
   
 public:
-  Ctl() {
-    data = DatMgr::getInstance();
-  }
+  Ctl(): data(data.getInstance()) {};
 
   ~Ctl(){};
   
@@ -50,23 +51,28 @@ public:
     string input;
     prompt();
     cin >> input;
+    if (debug) cout << "---> await: received: " << input << "\n";
     return sanitize(input);
   }
 
   cmd readinput(vector<string> vs) {
     if(vs.size() > 3) return mapcmd.at("?");
+    if(mapcmd.find(vs.at(0))==mapcmd.end()) { return cmd::UNKNOWN;}
+    if(vs.empty()) { cout << "vector is empty\n"; return cmd::EXIT; }
     switch (mapcmd.at(vs.at(0))) {
     case ADD_DOT:
       if (vs.size() == 1) return cmd::UNKNOWN;
       if (vs.at(1) == "-a") return cmd::UNKNOWN;
       data.add_dot(vs.at(1), vs.at(2), false);
       return cmd::NEXT;
+      
     case REMOVE_DOT:
       if (vs.size() == 1) return cmd::UNKNOWN;
       if (vs.at(1) == "-a") return cmd::UNKNOWN;
       data.unlink_a_dot(vs.at(1));
       data.remove_dot(vs.at(1));
       return cmd::NEXT;
+      
     case LINK:
       if (vs.size() == 1 || vs.size() == 2) return cmd::UNKNOWN;
       if (count(vs.begin(), vs.end(), "-a")) {
@@ -75,6 +81,7 @@ public:
       }
       data.link_a_dot(vs.at(1));
       return cmd::NEXT;
+      
     case UNLINK:
       if (vs.size() == 1 || vs.size() == 2) return cmd::UNKNOWN;
       if (count(vs.begin(), vs.end(), "-a")) {
